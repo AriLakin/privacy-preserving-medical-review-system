@@ -5,7 +5,7 @@
       "src": "server.js",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["**"]
+        "includeFiles": ["index.html", "deployment-info.template.json"]
       }
     }
   ],
@@ -16,6 +16,9 @@
     }
   ],
   "env": {
-    "PORT": "3000"
-  }
+    "PORT": "3000",
+    "NODE_ENV": "production"
+  },
+  "installCommand": "npm install --omit=dev",
+  "buildCommand": "echo 'Web server deployment - no build step required'"
 }

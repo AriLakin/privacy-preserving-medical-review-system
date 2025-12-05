@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedReview - Anonymous Medical Review Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --secondary-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --warning-color: #f59e0b;
+            --info-color: #06b6d4;
+            --text-dark: #f8fafc;
+            --text-light: #cbd5e1;
+            --bg-light: #1e293b;
+            --border-color: #334155;
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .app-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            background: linear-gradient(45deg, #ffffff, #f0f9ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .wallet-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background: #0f172a;
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .register-icon {
+            background: var(--primary-gradient);
+        }
+
+        .review-icon {
+            background: var(--secondary-gradient);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #1e293b;
+            color: var(--text-dark);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #06b6d4;
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2);
+        }
+
+        .rating-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .rating-input {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: var(--bg-light);
+            border-radius: 12px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .rating-input:hover {
+            border-color: #06b6d4;
+        }
+
+        .rating-input input {
+            width: 60px;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            background: #0f172a;
+            color: var(--text-dark);
+        }
+
+        .stars {
+            color: #fbbf24;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.875rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-secondary {
+            background: var(--secondary-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.6);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-dark);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-gradient);
+            color: white;
+            border-color: transparent;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-loading {
+            pointer-events: none;
+        }
+
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            margin: auto;
+            border: 2px solid transparent;
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Status Messages */
+        .status {
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .status.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .status.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .status.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error-color);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .status.info {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--info-color);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .status.warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning-color);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        /* Doctors Section */
+        .doctors-section {
+            background: #0f172a;
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-top: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .doctor-card {
+            background: var(--bg-light);
+            border: 2px solid transparent;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .doctor-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .doctor-card:hover {
+            border-color: #06b6d4;
+            background: #1e293b;
+            box-shadow: var(--shadow);
+        }
+
+        .doctor-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .doctor-info {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .doctor-details h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .doctor-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .meta-item i {
+            color: #06b6d4;
+        }
+
+        .doctor-rating {
+            text-align: center;
+            padding: 1rem;
+            background: #1e293b;
+            border-radius: 12px;
+            min-width: 140px;
+        }
+
+        .rating-display {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--secondary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .rating-details {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+        }
+
+        /* Network Warning */
+        .network-warning {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .network-warning:hover {
+            background: rgba(245, 158, 11, 0.15);
+        }
+
+        .network-warning i {
+            color: var(--warning-color);
+            font-size: 1.25rem;
+        }
+
+        /* Contract Config */
+        .contract-config {
+            background: #0f172a;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .config-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .config-header i {
+            color: #06b6d4;
+        }
+
+        .config-grid {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .config-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: #1e293b;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .config-label {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .config-value {
+            color: var(--text-light);
+            word-break: break-all;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 0 1rem;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .doctor-info {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .doctor-meta {
+                justify-content: center;
+            }
+
+            .rating-group {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Loading Skeleton */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .skeleton-text {
+            height: 20px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        .skeleton-text.short { width: 60%; }
+        .skeleton-text.medium { width: 80%; }
+        .skeleton-text.long { width: 100%; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-user-md"></i>
+                    <span>MedReview</span>
+                </div>
+                <div class="wallet-section">
+                    <div id="walletInfo" class="wallet-info">
+                        <button class="btn btn-outline" id="connectWallet">
+                            <i class="fas fa-wallet"></i>
+                            Connect Wallet
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Hero Section -->
+            <section class="hero fade-in">
+                <h1>Anonymous Medical Reviews</h1>
+                <p>Privacy-preserving doctor ratings using advanced FHE blockchain technology</p>
+
+                <div class="hero-stats">
+                    <div class="stat-card">
+                        <span class="stat-number" id="totalDoctors">-</span>
+                        <span class="stat-label">Registered Doctors</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="totalReviews">-</span>
+                        <span class="stat-label">Anonymous Reviews</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="avgRating">-</span>
+                        <span class="stat-label">Average Rating</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Network Warning -->
+            <div class="network-warning hidden" id="networkWarning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div>
+                    <strong>Network Configuration Required</strong>
+                    <p>Please switch to Zama Devnet for optimal functionality</p>
+                </div>
+            </div>
+
+            <!-- Contract Configuration -->
+            <div class="contract-config" id="contractConfig">
+                <div class="config-header">
+                    <i class="fas fa-cog"></i>
+                    <h3>System Configuration</h3>
+                </div>
+                <div class="config-grid">
+                    <div class="config-item">
+                        <span class="config-label">Contract Address:</span>
+                        <span class="config-value" id="contractAddress">Not configured</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-label">Network:</span>
+                        <span class="config-value" id="networkName">Unknown</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-label">Status:</span>
+                        <span class="config-value" id="contractStatus">Disconnected</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Cards -->
+            <div class="card-grid">
+                <!-- Register Doctor Card -->
+                <div class="card fade-in">
+                    <div class="card-header">
+                        <div class="card-icon register-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <h2 class="card-title">Register Doctor</h2>
+                    </div>
+
+                    <form id="registerForm">
+                        <div class="form-group">
+                            <label class="form-label" for="doctorName">
+                                <i class="fas fa-user-md"></i> Doctor Name
+                            </label>
+                            <input type="text" id="doctorName" class="form-input" placeholder="Dr. John Smith" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="specialty">
+                                <i class="fas fa-stethoscope"></i> Medical Specialty
+                            </label>
+                            <input type="text" id="specialty" class="form-input" placeholder="Cardiology" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="clinic">
+                                <i class="fas fa-hospital"></i> Clinic/Hospital
+                            </label>
+                            <input type="text" id="clinic" class="form-input" placeholder="Central Medical Center" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="registerBtn">
+                            <i class="fas fa-plus"></i>
+                            Register Doctor
+                        </button>
+                    </form>
+
+                    <div id="registerStatus" class="status hidden"></div>
+                </div>
+
+                <!-- Submit Review Card -->
+                <div class="card fade-in">
+                    <div class="card-header">
+                        <div class="card-icon review-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <h2 class="card-title">Submit Review</h2>
+                    </div>
+
+                    <form id="reviewForm">
+                        <div class="form-group">
+                            <label class="form-label" for="doctorSelect">
+                                <i class="fas fa-user-md"></i> Select Doctor
+                            </label>
+                            <select id="doctorSelect" class="form-input" required>
+                                <option value="">Choose a doctor...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-star"></i> Rate Your Experience
+                            </label>
+                            <div class="rating-group">
+                                <div class="rating-input">
+                                    <label>Overall:</label>
+                                    <input type="number" id="overallRating" min="1" max="5" placeholder="5" required>
+                                    <span class="stars">★★★★★</span>
+                                </div>
+                                <div class="rating-input">
+                                    <label>Professional:</label>
+                                    <input type="number" id="professionalismRating" min="1" max="5" placeholder="5" required>
+                                    <span class="stars">★★★★★</span>
+                                </div>
+                                <div class="rating-input">
+                                    <label>Communication:</label>
+                                    <input type="number" id="communicationRating" min="1" max="5" placeholder="5" required>
+                                    <span class="stars">★★★★★</span>
+                                </div>
+                                <div class="rating-input">
+                                    <label>Wait Time:</label>
+                                    <input type="number" id="waitTimeRating" min="1" max="5" placeholder="5" required>
+                                    <span class="stars">★★★★★</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="reviewComment">
+                                <i class="fas fa-comment"></i> Comment (Optional)
+                            </label>
+                            <textarea id="reviewComment" class="form-input" rows="3" placeholder="Share your experience (encrypted for privacy)..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-secondary" id="reviewBtn">
+                            <i class="fas fa-paper-plane"></i>
+                            Submit Anonymous Review
+                        </button>
+                    </form>
+
+                    <div id="reviewStatus" class="status hidden"></div>
+                </div>
+            </div>
+
+            <!-- Doctors Section -->
+            <section class="doctors-section fade-in">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h2 class="section-title">Registered Doctors</h2>
+                </div>
+
+                <div id="doctorsList">
+                    <div class="doctor-card skeleton">
+                        <div class="skeleton-text long"></div>
+                        <div class="skeleton-text medium"></div>
+                        <div class="skeleton-text short"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- External Scripts -->
+    <script>
+        // Load ethers.js with fallback CDNs and timeout
+        function loadEthers() {
+            return new Promise((resolve, reject) => {
+                const cdnUrls = [
+                    'https://unpkg.com/ethers@5.7.2/dist/ethers.umd.min.js',
+                    'https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js',
+                    'https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js',
+                    'https://cdn.ethers.io/lib/ethers-5.7.2.umd.min.js'
+                ];
+
+                let currentIndex = 0;
+                let loadTimeout;
+
+                function tryNext() {
+                    if (currentIndex >= cdnUrls.length) {
+                        // If all CDNs fail, create a basic fallback
+                        createBasicEthersStub();
+                        resolve();
+                        return;
+                    }
+
+                    const script = document.createElement('script');
+                    script.src = cdnUrls[currentIndex];
+
+                    // Set timeout for each script
+                    loadTimeout = setTimeout(() => {
+                        script.remove();
+                        currentIndex++;
+                        tryNext();
+                    }, 10000); // 10 second timeout
+
+                    script.onload = () => {
+                        clearTimeout(loadTimeout);
+                        if (typeof ethers !== 'undefined') {
+                            console.log(`Ethers loaded from: ${cdnUrls[currentIndex]}`);
+                            resolve();
+                        } else {
+                            script.remove();
+                            currentIndex++;
+                            tryNext();
+                        }
+                    };
+
+                    script.onerror = () => {
+                        clearTimeout(loadTimeout);
+                        script.remove();
+                        currentIndex++;
+                        tryNext();
+                    };
+
+                    document.head.appendChild(script);
+                }
+
+                tryNext();
+            });
+        }
+
+        // Create a basic ethers stub for offline/CDN failure scenarios
+        function createBasicEthersStub() {
+            window.ethers = {
+                providers: {
+                    Web3Provider: function() {
+                        throw new Error('Web3 provider not available - CDN loading failed');
+                    }
+                },
+                Contract: function() {
+                    throw new Error('Contract not available - CDN loading failed');
+                },
+                utils: {
+                    formatEther: function() { return '0'; },
+                    parseEther: function() { return '0'; }
+                }
+            };
+        }
+
+        // Check if ethers is already loaded and initialize
+        function initializeEthersAndApp() {
+            if (typeof ethers === 'undefined') {
+                // Show loading indicator
+                const walletInfo = document.getElementById('walletInfo');
+                if (walletInfo) {
+                    walletInfo.innerHTML = `
+                        <div style="color: white; font-size: 0.9rem;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            Loading Web3 library...
+                        </div>
+                    `;
+                }
+
+                loadEthers().then(() => {
+                    initializeApp();
+                }).catch((error) => {
+                    console.error('Failed to load ethers.js:', error);
+                    if (walletInfo) {
+                        walletInfo.innerHTML = `
+                            <div style="color: #ef4444; font-size: 0.9rem;">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                Web3 library failed to load. Some features may not work.
+                            </div>
+                        `;
+                    }
+                    // Still try to initialize the app with stub
+                    initializeApp();
+                });
+            } else {
+                initializeApp();
+            }
+        }
+
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeEthersAndApp);
+        } else {
+            initializeEthersAndApp();
+        }
+    </script>
+    <script>
+        // Contract configuration - Update these values after deployment
+        const CONTRACT_ADDRESS = "0x65D7BB2CBEb5C621d88aF13774d3c709C4E2C926"; // Your deployed contract address
+        const ZAMA_DEVNET_CONFIG = {
+            chainId: '0x2328', // 9000 in hex
+            chainName: 'Zama Devnet',
+            rpcUrls: ['https://devnet.zama.ai'],
+            nativeCurrency: {
+                name: 'ZAMA',
+                symbol: 'ZAMA',
+                decimals: 18
+            }
+        };
+
+        const CONTRACT_ABI = [
+            "function platform() view returns (address)",
+            "function registerDoctor(string memory _name, string memory _specialty, string memory _clinic) external returns (uint256)",
+            "function submitAnonymousReview(uint256 _doctorId, uint8 _rating, uint8 _professionalism, uint8 _communication, uint8 _waitTime, string memory _encryptedComment) external",
+            "function requestRatingAggregation(uint256 _doctorId) external",
+            "function getDoctorInfo(uint256 _doctorId) external view returns (string memory name, string memory specialty, string memory clinic, uint256 totalReviews, uint256 registrationTime)",
+            "function getDoctorRating(uint256 _doctorId) external view returns (uint8 averageRating, uint8 averageProfessionalism, uint8 averageCommunication, uint8 averageWaitTime, uint256 totalReviews, uint256 lastUpdated, bool isRevealed)",
+            "function getReviewStatus(address _reviewer, uint256 _doctorId) external view returns (bool)",
+            "function getAllDoctorsCount() external view returns (uint256)",
+            "function getTotalReviewsCount() external view returns (uint256)",
+            "function canRequestAggregation(uint256 _doctorId) external view returns (bool)",
+            "event DoctorRegistered(uint256 indexed doctorId, string name, string specialty)",
+            "event ReviewSubmitted(uint256 indexed reviewId, uint256 indexed doctorId, address indexed reviewer)",
+            "event RatingRevealed(uint256 indexed doctorId, uint8 averageRating, uint256 totalReviews)"
+        ];
+
+        let provider, signer, contract, userAddress, currentNetwork;
+
+        // Initialize the application
+        async function initializeApp() {
+            updateContractConfig();
+            updateStats();
+
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    provider = new ethers.providers.Web3Provider(window.ethereum);
+                    await detectNetwork();
+
+                    // Check if wallet is already connected
+                    const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                    if (accounts.length > 0) {
+                        // Auto-connect if wallet was previously connected
+                        await connectWallet();
+                    } else {
+                        // Show connect button
+                        showWalletStatus('Connect Wallet', 'connect');
+                    }
+                } catch (error) {
+                    console.error('Failed to initialize:', error);
+                    showWalletStatus('Please install MetaMask to use this application', 'error');
+                }
+            } else {
+                showWalletStatus('Please install MetaMask to use this application', 'error');
+            }
+        }
+
+        // Update contract configuration display
+        function updateContractConfig() {
+            document.getElementById('contractAddress').textContent = CONTRACT_ADDRESS || 'Not configured';
+            document.getElementById('contractStatus').textContent = CONTRACT_ADDRESS ? 'Configured' : 'Needs configuration';
+        }
+
+        // Update statistics
+        function updateStats() {
+            document.getElementById('totalDoctors').textContent = '-';
+            document.getElementById('totalReviews').textContent = '-';
+            document.getElementById('avgRating').textContent = '-';
+        }
+
+        // Detect current network
+        async function detectNetwork() {
+            try {
+                const network = await provider.getNetwork();
+                currentNetwork = network;
+                document.getElementById('networkName').textContent = `${network.name} (Chain ID: ${network.chainId})`;
+
+                if (network.chainId !== 9000) {
+                    document.getElementById('networkWarning').classList.remove('hidden');
+                } else {
+                    document.getElementById('networkWarning').classList.add('hidden');
+                }
+            } catch (error) {
+                console.error('Failed to detect network:', error);
+            }
+        }
+
+        // Switch to Zama Devnet
+        async function switchToZamaDevnet() {
+            try {
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: ZAMA_DEVNET_CONFIG.chainId }],
+                });
+            } catch (switchError) {
+                if (switchError.code === 4902) {
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [ZAMA_DEVNET_CONFIG],
+                        });
+                    } catch (addError) {
+                        throw addError;
+                    }
+                } else {
+                    throw switchError;
+                }
+            }
+        }
+
+        // Show wallet status
+        function showWalletStatus(message, type) {
+            const walletInfo = document.getElementById('walletInfo');
+            if (!walletInfo) return;
+
+            if (type === 'connected') {
+                walletInfo.innerHTML = `
+                    <div style="color: white; font-size: 0.9rem;">
+                        <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                        ${message}
+                    </div>
+                `;
+            } else if (type === 'error') {
+                walletInfo.innerHTML = `
+                    <div style="color: #ef4444; font-size: 0.9rem;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        ${message}
+                    </div>
+                `;
+            } else {
+                // Default to connect button
+                walletInfo.innerHTML = `
+                    <button class="btn btn-outline" id="connectWallet">
+                        <i class="fas fa-wallet"></i>
+                        ${message}
+                    </button>
+                `;
+                // Add event listener after button is created
+                setTimeout(() => {
+                    const connectBtn = document.getElementById('connectWallet');
+                    if (connectBtn) {
+                        connectBtn.addEventListener('click', connectWallet);
+                    }
+                }, 0);
+            }
+        }
+
+        // Connect wallet
+        async function connectWallet() {
+            if (!provider) return;
+
+            try {
+                setButtonLoading('connectWallet', true);
+
+                // Request account access if needed
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                if (accounts.length === 0) {
+                    throw new Error('No accounts found');
+                }
+
+                signer = provider.getSigner();
+                userAddress = await signer.getAddress();
+
+                await detectNetwork();
+
+                // Initialize contract if address is configured
+                if (CONTRACT_ADDRESS && CONTRACT_ADDRESS.length > 0) {
+                    try {
+                        contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+
+                        // Test contract connection
+                        await contract.getAllDoctorsCount();
+
+                        showWalletStatus(`Connected: ${userAddress.substring(0, 6)}...${userAddress.substring(38)}`, 'connected');
+                        document.getElementById('contractStatus').textContent = 'Connected';
+
+                        await loadDoctors();
+                        await updateStatsFromContract();
+                    } catch (contractError) {
+                        console.error('Contract connection failed:', contractError);
+                        showWalletStatus(`Connected: ${userAddress.substring(0, 6)}...${userAddress.substring(38)} (Contract Error)`, 'connected');
+                        document.getElementById('contractStatus').textContent = 'Connection failed';
+                    }
+                } else {
+                    showWalletStatus(`Connected: ${userAddress.substring(0, 6)}...${userAddress.substring(38)} (No Contract)`, 'connected');
+                    document.getElementById('contractStatus').textContent = 'Not configured';
+                }
+            } catch (error) {
+                console.error('Failed to connect wallet:', error);
+                showStatus('walletInfo', 'Failed to connect wallet: ' + error.message, 'error');
+            } finally {
+                setButtonLoading('connectWallet', false);
+            }
+        }
+
+        // Update statistics from contract
+        async function updateStatsFromContract() {
+            if (!contract) return;
+
+            try {
+                const doctorCount = await contract.getAllDoctorsCount();
+                const reviewCount = await contract.getTotalReviewsCount();
+
+                document.getElementById('totalDoctors').textContent = doctorCount.toString();
+                document.getElementById('totalReviews').textContent = reviewCount.toString();
+
+                // Calculate average rating
+                let totalRating = 0;
+                let ratedDoctors = 0;
+
+                for (let i = 1; i <= doctorCount.toNumber(); i++) {
+                    try {
+                        const rating = await contract.getDoctorRating(i);
+                        if (rating.isRevealed && rating.averageRating > 0) {
+                            totalRating += rating.averageRating;
+                            ratedDoctors++;
+                        }
+                    } catch (error) {
+                        console.error(`Failed to get rating for doctor ${i}:`, error);
+                    }
+                }
+
+                const avgRating = ratedDoctors > 0 ? (totalRating / ratedDoctors).toFixed(1) : '-';
+                document.getElementById('avgRating').textContent = avgRating;
+            } catch (error) {
+                console.error('Failed to update stats:', error);
+            }
+        }
+
+        // Load doctors from contract
+        async function loadDoctors() {
+            if (!contract) {
+                document.getElementById('doctorsList').innerHTML =
+                    '<div class="doctor-card"><p style="text-align: center; color: var(--text-light);">Contract not available. Please configure the contract address.</p></div>';
+                return;
+            }
+
+            try {
+                const doctorCount = await contract.getAllDoctorsCount();
+                const doctorsList = document.getElementById('doctorsList');
+                const doctorSelect = document.getElementById('doctorSelect');
+
+                doctorsList.innerHTML = '';
+                doctorSelect.innerHTML = '<option value="">Choose a doctor...</option>';
+
+                if (doctorCount.toNumber() === 0) {
+                    doctorsList.innerHTML = `
+                        <div class="doctor-card">
+                            <p style="text-align: center; color: var(--text-light);">
+                                <i class="fas fa-info-circle"></i>
+                                No doctors registered yet. Register the first doctor to get started!
+                            </p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                for (let i = 1; i <= doctorCount.toNumber(); i++) {
+                    try {
+                        const doctorInfo = await contract.getDoctorInfo(i);
+                        const doctorRating = await contract.getDoctorRating(i);
+
+                        // Add to select dropdown
+                        const option = document.createElement('option');
+                        option.value = i;
+                        option.textContent = `${doctorInfo.name} - ${doctorInfo.specialty}`;
+                        doctorSelect.appendChild(option);
+
+                        // Add to doctors list
+                        const doctorCard = document.createElement('div');
+                        doctorCard.className = 'doctor-card fade-in';
+
+                        const ratingDisplay = doctorRating.isRevealed
+                            ? `${doctorRating.averageRating}/5`
+                            : 'Pending';
+
+                        const canAggregate = await contract.canRequestAggregation(i);
+
+                        doctorCard.innerHTML = `
+                            <div class="doctor-info">
+                                <div class="doctor-details">
+                                    <h3>${doctorInfo.name}</h3>
+                                    <div class="doctor-meta">
+                                        <div class="meta-item">
+                                            <i class="fas fa-stethoscope"></i>
+                                            <span>${doctorInfo.specialty}</span>
+                                        </div>
+                                        <div class="meta-item">
+                                            <i class="fas fa-hospital"></i>
+                                            <span>${doctorInfo.clinic}</span>
+                                        </div>
+                                        <div class="meta-item">
+                                            <i class="fas fa-calendar"></i>
+                                            <span>Registered ${new Date(doctorInfo.registrationTime * 1000).toLocaleDateString()}</span>
+                                        </div>
+                                    </div>
+                                    <div class="meta-item">
+                                        <i class="fas fa-comment"></i>
+                                        <span>${doctorInfo.totalReviews.toString()} reviews submitted</span>
+                                    </div>
+                                </div>
+                                <div class="doctor-rating">
+                                    <div class="rating-display">${ratingDisplay}</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-light); margin-bottom: 0.5rem;">
+                                        ${doctorRating.totalReviews.toString()} aggregated
+                                    </div>
+                                    ${doctorRating.isRevealed ? `
+                                        <div class="rating-details">
+                                            <div><i class="fas fa-user-tie"></i> Professional: ${doctorRating.averageProfessionalism}/5</div>
+                                            <div><i class="fas fa-comments"></i> Communication: ${doctorRating.averageCommunication}/5</div>
+                                            <div><i class="fas fa-clock"></i> Wait Time: ${doctorRating.averageWaitTime}/5</div>
+                                        </div>
+                                    ` : ''}
+                                    ${canAggregate ? `
+                                        <button class="btn btn-outline" onclick="requestAggregation(${i})" style="margin-top: 0.75rem; padding: 0.5rem 1rem; font-size: 0.8rem;">
+                                            <i class="fas fa-calculator"></i>
+                                            Reveal Ratings
+                                        </button>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        `;
+
+                        doctorsList.appendChild(doctorCard);
+                    } catch (error) {
+                        console.error(`Failed to load doctor ${i}:`, error);
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to load doctors:', error);
+                document.getElementById('doctorsList').innerHTML =
+                    '<div class="doctor-card"><p style="text-align: center; color: var(--error-color);"><i class="fas fa-exclamation-triangle"></i> Failed to load doctors. Please check your connection and try again.</p></div>';
+            }
+        }
+
+        // Request rating aggregation
+        async function requestAggregation(doctorId) {
+            if (!contract) return;
+
+            try {
+                showGlobalMessage('Requesting rating aggregation...', 'info');
+                const tx = await contract.requestRatingAggregation(doctorId);
+                showGlobalMessage('Transaction submitted. Waiting for confirmation...', 'info');
+                await tx.wait();
+                showGlobalMessage('Rating aggregation requested successfully!', 'success');
+                await loadDoctors();
+                await updateStatsFromContract();
+            } catch (error) {
+                console.error('Failed to request aggregation:', error);
+                showGlobalMessage('Failed to request aggregation: ' + (error.reason || error.message), 'error');
+            }
+        }
+
+        // Check if user is platform owner
+        async function isPlatformOwner() {
+            if (!contract || !userAddress) return false;
+            try {
+                const platformAddress = await contract.platform();
+                return platformAddress.toLowerCase() === userAddress.toLowerCase();
+            } catch (error) {
+                return false;
+            }
+        }
+
+        // Set button loading state
+        function setButtonLoading(buttonId, loading) {
+            const button = document.getElementById(buttonId);
+            if (button) {
+                if (loading) {
+                    button.classList.add('btn-loading');
+                    button.disabled = true;
+                } else {
+                    button.classList.remove('btn-loading');
+                    button.disabled = false;
+                }
+            }
+        }
+
+        // Register doctor
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!contract) {
+                showStatus('registerStatus', 'Contract not available. Please configure the contract address.', 'error');
+                return;
+            }
+
+            // Check if user is platform owner
+            if (!(await isPlatformOwner())) {
+                showStatus('registerStatus', 'Only the platform owner can register doctors', 'error');
+                return;
+            }
+
+            const name = document.getElementById('doctorName').value.trim();
+            const specialty = document.getElementById('specialty').value.trim();
+            const clinic = document.getElementById('clinic').value.trim();
+
+            if (!name || !specialty || !clinic) {
+                showStatus('registerStatus', 'Please fill in all fields', 'error');
+                return;
+            }
+
+            try {
+                setButtonLoading('registerBtn', true);
+                showStatus('registerStatus', 'Registering doctor...', 'info');
+
+                const tx = await contract.registerDoctor(name, specialty, clinic);
+                showStatus('registerStatus', 'Transaction submitted. Waiting for confirmation...', 'info');
+                await tx.wait();
+
+                showStatus('registerStatus', 'Doctor registered successfully!', 'success');
+                document.getElementById('registerForm').reset();
+                await loadDoctors();
+                await updateStatsFromContract();
+            } catch (error) {
+                console.error('Registration failed:', error);
+                showStatus('registerStatus', 'Registration failed: ' + (error.reason || error.message), 'error');
+            } finally {
+                setButtonLoading('registerBtn', false);
+            }
+        });
+
+        // Submit review
+        document.getElementById('reviewForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!contract) {
+                showStatus('reviewStatus', 'Contract not available. Please configure the contract address.', 'error');
+                return;
+            }
+
+            const doctorId = document.getElementById('doctorSelect').value;
+            const rating = parseInt(document.getElementById('overallRating').value);
+            const professionalism = parseInt(document.getElementById('professionalismRating').value);
+            const communication = parseInt(document.getElementById('communicationRating').value);
+            const waitTime = parseInt(document.getElementById('waitTimeRating').value);
+            const comment = document.getElementById('reviewComment').value.trim() || "No comment provided";
+
+            if (!doctorId) {
+                showStatus('reviewStatus', 'Please select a doctor', 'error');
+                return;
+            }
+
+            // Validate ratings
+            if ([rating, professionalism, communication, waitTime].some(r => r < 1 || r > 5)) {
+                showStatus('reviewStatus', 'All ratings must be between 1 and 5', 'error');
+                return;
+            }
+
+            try {
+                // Check if user has already reviewed this doctor
+                const hasReviewed = await contract.getReviewStatus(userAddress, doctorId);
+                if (hasReviewed) {
+                    showStatus('reviewStatus', 'You have already reviewed this doctor', 'error');
+                    return;
+                }
+
+                setButtonLoading('reviewBtn', true);
+                showStatus('reviewStatus', 'Submitting anonymous review...', 'info');
+
+                const tx = await contract.submitAnonymousReview(
+                    doctorId,
+                    rating,
+                    professionalism,
+                    communication,
+                    waitTime,
+                    comment
+                );
+                showStatus('reviewStatus', 'Transaction submitted. Waiting for confirmation...', 'info');
+                await tx.wait();
+
+                showStatus('reviewStatus', 'Anonymous review submitted successfully!', 'success');
+                document.getElementById('reviewForm').reset();
+                await loadDoctors();
+                await updateStatsFromContract();
+            } catch (error) {
+                console.error('Review submission failed:', error);
+                showStatus('reviewStatus', 'Review submission failed: ' + (error.reason || error.message), 'error');
+            } finally {
+                setButtonLoading('reviewBtn', false);
+            }
+        });
+
+        // Show status message
+        function showStatus(elementId, message, type) {
+            const statusElement = document.getElementById(elementId);
+            if (statusElement) {
+                const icon = type === 'success' ? 'check-circle' :
+                           type === 'error' ? 'exclamation-circle' :
+                           type === 'warning' ? 'exclamation-triangle' : 'info-circle';
+
+                statusElement.innerHTML = `<i class="fas fa-${icon}"></i> ${message}`;
+                statusElement.className = `status ${type} show`;
+
+                if (type === 'success') {
+                    setTimeout(() => {
+                        statusElement.classList.remove('show');
+                        setTimeout(() => statusElement.classList.add('hidden'), 300);
+                    }, 5000);
+                }
+            }
+        }
+
+        // Show global message
+        function showGlobalMessage(message, type) {
+            let messageArea = document.getElementById('globalMessage');
+            if (!messageArea) {
+                messageArea = document.createElement('div');
+                messageArea.id = 'globalMessage';
+                messageArea.className = 'status';
+                messageArea.style.position = 'fixed';
+                messageArea.style.top = '20px';
+                messageArea.style.right = '20px';
+                messageArea.style.zIndex = '1000';
+                messageArea.style.maxWidth = '400px';
+                document.body.appendChild(messageArea);
+            }
+
+            const icon = type === 'success' ? 'check-circle' :
+                        type === 'error' ? 'exclamation-circle' :
+                        type === 'warning' ? 'exclamation-triangle' : 'info-circle';
+
+            messageArea.innerHTML = `<i class="fas fa-${icon}"></i> ${message}`;
+            messageArea.className = `status ${type} show`;
+
+            if (type === 'success' || type === 'info') {
+                setTimeout(() => {
+                    messageArea.classList.remove('show');
+                }, 5000);
+            }
+        }
+
+        // Network warning click handler
+        document.getElementById('networkWarning').addEventListener('click', async () => {
+            try {
+                await switchToZamaDevnet();
+            } catch (error) {
+                console.error('Failed to switch network:', error);
+                showGlobalMessage('Failed to switch to Zama Devnet: ' + error.message, 'error');
+            }
+        });
+
+        // Initialize the application when page loads
+        // Note: initializeApp is called after ethers.js loads successfully
+
+        // Handle account changes
+        if (window.ethereum) {
+            window.ethereum.on('accountsChanged', (accounts) => {
+                if (accounts.length === 0) {
+                    location.reload();
+                } else {
+                    connectWallet();
+                }
+            });
+
+            window.ethereum.on('chainChanged', (chainId) => {
+                location.reload();
+            });
+        }
+    </script>
+</body>
+</html>

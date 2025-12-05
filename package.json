@@ -1,35 +1,59 @@
 {
-  "name": "anonymous-medical-review-dapp",
+  "name": "fhevm-anonymous-medical-review",
   "version": "1.0.0",
-  "description": "Anonymous Medical Review System using FHE for privacy-preserving doctor ratings",
+  "description": "FHEVM Example: Privacy-Preserving Medical Review System - Demonstrating access control, encryption, and public decryption patterns",
   "main": "index.js",
   "scripts": {
     "dev": "node server.js",
     "start": "node server.js",
     "compile": "npx hardhat compile",
     "deploy": "npx hardhat run scripts/deploy.js --network sepolia",
-    "test": "npx hardhat test"
+    "deploy:local": "npx hardhat run scripts/deploy.js --network localhost",
+    "test": "npx hardhat test",
+    "test:verbose": "npx hardhat test --verbose",
+    "test:gas": "REPORT_GAS=true npx hardhat test",
+    "coverage": "npx hardhat coverage",
+    "scaffold": "node automation/create-fhevm-example.js",
+    "generate-docs": "node automation/generate-docs.js",
+    "node": "npx hardhat node"
   },
   "dependencies": {
     "express": "^4.18.2",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "ethers": "^6.7.1",
-    "@fhevm/solidity": "^0.4.0"
+    "@fhevm/solidity": "^0.9.1"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^3.0.2",
-    "hardhat": "^2.17.1"
+    "@types/node": "^20.0.0",
+    "hardhat": "^2.17.1",
+    "chai": "^4.3.7",
+    "typescript": "^5.0.0",
+    "ts-node": "^10.9.1"
   },
   "keywords": [
-    "blockchain",
+    "fhevm",
     "fhe",
-    "privacy",
-    "medical",
-    "reviews",
-    "anonymous",
-    "healthcare"
+    "fully-homomorphic-encryption",
+    "zama",
+    "privacy-preserving",
+    "medical-review",
+    "anonymous-rating",
+    "healthcare",
+    "access-control",
+    "public-decryption",
+    "encrypted-computation",
+    "bounty-submission"
   ],
-  "author": "Anonymous Medical Review Platform",
-  "license": "MIT"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/fhevm-anonymous-medical-review"
+  },
+  "author": "FHEVM Example Contributor",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
 }

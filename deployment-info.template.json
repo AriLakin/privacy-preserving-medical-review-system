@@ -1,0 +1,24 @@
+{
+  "network": "sepolia",
+  "contractAddress": "0x0000000000000000000000000000000000000000",
+  "deployerAddress": "0x0000000000000000000000000000000000000000",
+  "transactionHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "blockNumber": 0,
+  "timestamp": "2025-12-05T00:00:00.000Z",
+  "gasUsed": "0",
+  "status": "placeholder",
+  "note": "This is a template. Deploy your contract to update this file.",
+  "contractABI": [
+    "function registerDoctor(string memory _name, string memory _specialty, string memory _clinic) external returns (uint256)",
+    "function submitAnonymousReview(uint256 _doctorId, uint8 _rating, uint8 _professionalism, uint8 _communication, uint8 _waitTime, string memory _encryptedComment) external",
+    "function requestRatingAggregation(uint256 _doctorId) external",
+    "function getDoctorInfo(uint256 _doctorId) external view returns (string memory name, string memory specialty, string memory clinic, uint256 totalReviews, uint256 registrationTime)",
+    "function getDoctorRating(uint256 _doctorId) external view returns (uint8 averageRating, uint8 averageProfessionalism, uint8 averageCommunication, uint8 averageWaitTime, uint256 totalReviews, uint256 lastUpdated, bool isRevealed)",
+    "function getReviewStatus(address _reviewer, uint256 _doctorId) external view returns (bool)",
+    "function getAllDoctorsCount() external view returns (uint256)",
+    "function canRequestAggregation(uint256 _doctorId) external view returns (bool)",
+    "event DoctorRegistered(uint256 indexed doctorId, string name, string specialty)",
+    "event ReviewSubmitted(uint256 indexed reviewId, uint256 indexed doctorId, address indexed reviewer)",
+    "event RatingRevealed(uint256 indexed doctorId, uint8 averageRating, uint256 totalReviews)"
+  ]
+}
